@@ -8,8 +8,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    Vector2 lookDirection;
-    Vector3 velocity;
+    Vector2 rotation;
+    Vector3 inputVelocity;
     [SerializeField] Transform cameraTransform;
     [SerializeField] float mouseSensitivity;
     [SerializeField] float movementSpeed;
@@ -19,46 +19,54 @@ public class PlayerController : MonoBehaviour
     InputAction lookInput;
     InputAction moveInput;
 
+    Rigidbody rigidBody;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         playerInput = GetComponent<PlayerInput>();
         lookInput = playerInput.actions["look"];
         moveInput = playerInput.actions["move"];
+        rigidBody = GetComponent<Rigidbody>();
     }
     void Update()
     {
-        UpdateDirection();
+        UpdateRotation();
         UpdateMovement();
-
     }
 
-    void UpdateDirection()
+    private void FixedUpdate()
     {
-        var lookInputDirection = lookInput.ReadValue<Vector2>();
-        lookDirection.x += lookInputDirection.x * mouseSensitivity;
-        lookDirection.y += lookInputDirection.y * mouseSensitivity;
+        var velocity = rigidBody.velocity;
 
-        lookDirection.y = math.clamp(lookDirection.y, -89f, 89f);
+        velocity = Vector3.MoveTowards(velocity, 
+            new Vector3(inputVelocity.x, velocity.y, inputVelocity.z), acceleration);
 
-        transform.localRotation = Quaternion.Euler(0, lookDirection.x, 0);
-        cameraTransform.localRotation = Quaternion.Euler(-lookDirection.y, 0, 0);
+        rigidBody.velocity = velocity;
+    }
+
+    void UpdateRotation()
+    {
+        var input = lookInput.ReadValue<Vector2>();
+        rotation.x += input.x * mouseSensitivity;
+        rotation.y += input.y * mouseSensitivity;
+
+        rotation.y = math.clamp(rotation.y, -89f, 89f);
+
+        transform.localRotation = Quaternion.Euler(0, rotation.x, 0);
+        cameraTransform.localRotation = Quaternion.Euler(-rotation.y, 0, 0);
     }
 
     void UpdateMovement()
     {
-        var moveInputDirection = moveInput.ReadValue<Vector2>();
+        var input = moveInput.ReadValue<Vector2>();
+        var inputVector = new Vector3();
 
-        var moveDirection = new Vector3();
-        moveDirection += transform.right * moveInputDirection.x;
-        moveDirection += transform.forward * moveInputDirection.y;
-        moveDirection = Vector3.ClampMagnitude(moveDirection, 1f);
-        moveDirection *= movementSpeed;
+        inputVector += transform.right * input.x;
+        inputVector += transform.forward * input.y;
+        inputVector = Vector3.ClampMagnitude(inputVector, 1f);
 
-        velocity.x = Mathf.Lerp(velocity.x, moveDirection.x, 1 - Mathf.Exp(-acceleration * Time.deltaTime));
-        velocity.z = Mathf.Lerp(velocity.z, moveDirection.z, 1 - Mathf.Exp(-acceleration * Time.deltaTime));
-
-        transform.Translate(velocity * Time.deltaTime, Space.World);
-        
+        var inputDirection = Vector3.Normalize(inputVector);
+        inputVelocity = inputVector * movementSpeed;
     }
 }
