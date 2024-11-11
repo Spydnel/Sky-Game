@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
         moveInput = playerInput.actions["move"];
         rigidBody = GetComponent<Rigidbody>();
     }
+
     void Update()
     {
         UpdateRotation();
@@ -51,9 +52,6 @@ public class PlayerController : MonoBehaviour
     {
         var velocity = rigidBody.velocity;
 
-        transform.localRotation = Quaternion.Euler(0, rotation.x, 0);
-        cameraTransform.localRotation = Quaternion.Euler(-rotation.y, 0, 0);
-
         if (onGround)
         {
             velocity = Vector3.MoveTowards(velocity, inputVelocity, acceleration);
@@ -67,6 +65,12 @@ public class PlayerController : MonoBehaviour
         rigidBody.velocity = velocity;
 
         onGround = false;
+    }
+
+    void LateUpdate()
+    {
+        transform.localRotation = Quaternion.Euler(0, rotation.x, 0);
+        cameraTransform.localRotation = Quaternion.Euler(-rotation.y, 0, 0);
     }
 
     void UpdateRotation()
