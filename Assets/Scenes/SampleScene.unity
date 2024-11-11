@@ -568,7 +568,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 330585546}
   mouseSensitivity: 0.15
   movementSpeed: 10
-  acceleration: 0.94
+  acceleration: 0.95
 --- !u!4 &1586966257
 Transform:
   m_ObjectHideFlags: 0

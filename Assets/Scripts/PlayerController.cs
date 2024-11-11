@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
 {
     Vector2 rotation;
     Vector3 inputVelocity;
+    bool onGround;
+
     [SerializeField] Transform cameraTransform;
     [SerializeField] float mouseSensitivity;
     [SerializeField] float movementSpeed;
@@ -35,14 +37,36 @@ public class PlayerController : MonoBehaviour
         UpdateMovement();
     }
 
+    void OnCollisionEnter()
+    {
+        onGround = true;
+    }
+
+    void OnCollisionStay()
+    {
+        onGround = true;
+    }
+
     private void FixedUpdate()
     {
         var velocity = rigidBody.velocity;
 
-        velocity = Vector3.MoveTowards(velocity, 
-            new Vector3(inputVelocity.x, velocity.y, inputVelocity.z), acceleration);
+        transform.localRotation = Quaternion.Euler(0, rotation.x, 0);
+        cameraTransform.localRotation = Quaternion.Euler(-rotation.y, 0, 0);
+
+        if (onGround)
+        {
+            velocity = Vector3.MoveTowards(velocity, inputVelocity, acceleration);
+        }
+        else
+        { 
+        velocity = Vector3.MoveTowards(velocity,
+                new Vector3(inputVelocity.x, velocity.y, inputVelocity.z), acceleration/2);
+        }
 
         rigidBody.velocity = velocity;
+
+        onGround = false;
     }
 
     void UpdateRotation()
@@ -52,9 +76,6 @@ public class PlayerController : MonoBehaviour
         rotation.y += input.y * mouseSensitivity;
 
         rotation.y = math.clamp(rotation.y, -89f, 89f);
-
-        transform.localRotation = Quaternion.Euler(0, rotation.x, 0);
-        cameraTransform.localRotation = Quaternion.Euler(-rotation.y, 0, 0);
     }
 
     void UpdateMovement()
