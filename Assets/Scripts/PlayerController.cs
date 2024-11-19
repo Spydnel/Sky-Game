@@ -69,8 +69,8 @@ public class PlayerController : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.localRotation = Quaternion.Euler(0, rotation.x, 0);
-        cameraTransform.localRotation = Quaternion.Euler(-rotation.y, 0, 0);
+        //transform.localRotation = Quaternion.Euler(0, rotation.x, 0);
+        cameraTransform.localRotation = Quaternion.Euler(-rotation.y, rotation.x, 0);
     }
 
     void UpdateRotation()
@@ -87,8 +87,8 @@ public class PlayerController : MonoBehaviour
         var input = moveInput.ReadValue<Vector2>();
         var inputVector = new Vector3();
 
-        inputVector += transform.right * input.x;
-        inputVector += transform.forward * input.y;
+        inputVector += cameraTransform.right * input.x;
+        inputVector += cameraTransform.forward * input.y;
         inputVector = Vector3.ClampMagnitude(inputVector, 1f);
 
         var inputDirection = Vector3.Normalize(inputVector);
