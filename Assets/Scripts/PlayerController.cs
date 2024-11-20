@@ -86,9 +86,10 @@ public class PlayerController : MonoBehaviour
     {
         var input = moveInput.ReadValue<Vector2>();
         var inputVector = new Vector3();
+        var facing = Quaternion.Euler(0, rotation.x, 0);
 
-        inputVector += cameraTransform.right * input.x;
-        inputVector += cameraTransform.forward * input.y;
+        inputVector += facing * Vector3.right * input.x;
+        inputVector += facing * Vector3.forward * input.y;
         inputVector = Vector3.ClampMagnitude(inputVector, 1f);
 
         var inputDirection = Vector3.Normalize(inputVector);
