@@ -11,15 +11,18 @@ public class PlayerController : MonoBehaviour
     Vector2 rotation;
     Vector3 inputVelocity;
     bool onGround;
+    bool jumping;
 
     [SerializeField] Transform cameraTransform;
     [SerializeField] float mouseSensitivity;
     [SerializeField] float movementSpeed;
     [SerializeField] float acceleration;
+    [SerializeField] float jumpStrength;
 
     PlayerInput playerInput;
     InputAction lookInput;
     InputAction moveInput;
+    InputAction jumpInput;
 
     Rigidbody rigidBody;
 
@@ -29,6 +32,7 @@ public class PlayerController : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         lookInput = playerInput.actions["look"];
         moveInput = playerInput.actions["move"];
+        jumpInput = playerInput.actions["jump"];
         rigidBody = GetComponent<Rigidbody>();
     }
 
@@ -62,6 +66,8 @@ public class PlayerController : MonoBehaviour
                 new Vector3(inputVelocity.x, velocity.y, inputVelocity.z), acceleration/2);
         }
 
+        if (jumping && onGround) velocity.y = jumpStrength;
+
         rigidBody.velocity = velocity;
 
         onGround = false;
@@ -84,6 +90,7 @@ public class PlayerController : MonoBehaviour
 
     void UpdateMovement()
     {
+        jumping = (jumpInput.ReadValue<float>() > 0);
         var input = moveInput.ReadValue<Vector2>();
         var inputVector = new Vector3();
         var facing = Quaternion.Euler(0, rotation.x, 0);
