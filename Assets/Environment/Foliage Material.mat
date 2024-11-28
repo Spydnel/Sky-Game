@@ -101,7 +101,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Ambient_Occlusion: 0.6
+    - _Ambient_Occlusion: 0.2
     - _Blend: 1
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -111,18 +111,18 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _Distance: 1.28
+    - _Distance: 1.48
     - _Divide: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
     - _Float: 13149
-    - _Fresnel_Opacity: 1
-    - _Fresnel_Power: 1.35
+    - _Fresnel_Opacity: -0.68
+    - _Fresnel_Power: 2.65
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Leaf_Size: 0.6
+    - _Leaf_Size: 0.97
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.01
@@ -143,10 +143,11 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color_1: {r: 0.15095273, g: 0.4716981, b: 0.016909866, a: 1}
-    - _Color_2: {r: 0.33009887, g: 0.6301887, b: 0, a: 1}
+    - _Color_1: {r: 0, g: 0.5031446, b: 0.20420493, a: 1}
+    - _Color_2: {r: 0.3495106, g: 0.6603774, b: 0.010383225, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Fresnel_Color: {r: 0.63286006, g: 0.6754716, b: 0.1414667, a: 0}
-    - _Rim_Color: {r: 0.27568668, g: 0.3660378, b: 0, a: 1}
+    - _Rim_Color: {r: 0.19496852, g: 0.38993704, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Wind: {r: -1, g: 0, b: 0.5, a: 0}
   m_BuildTextureStacks: []
