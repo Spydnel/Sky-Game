@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IMovable
 {
     Vector2 rotation;
     Vector3 inputVelocity;
@@ -54,21 +54,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var velocity = rigidBody.velocity;
-
-        if (onGround)
-        {
-            velocity = Vector3.MoveTowards(velocity, inputVelocity, acceleration);
-        }
-        else
-        { 
-        velocity = Vector3.MoveTowards(velocity,
-                new Vector3(inputVelocity.x, velocity.y, inputVelocity.z), acceleration/2);
-        }
-
-        if (jumping && onGround) velocity.y = jumpStrength;
-
-        rigidBody.velocity = velocity;
+        //Vector3 test()
 
         onGround = false;
     }
