@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour, IMovable
         onGround = false;
     }
 
-    void UpdateFacing()
+    public void UpdateFacing()
     {
         var input = lookInput.ReadValue<Vector2>();
         rotation.x += input.x * mouseSensitivity;
