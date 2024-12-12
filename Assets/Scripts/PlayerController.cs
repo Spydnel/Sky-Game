@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour, IMovable
 {
     Vector2 rotation;
-    Vector3 inputVelocity;
+    Vector3 targetVelocity;
     bool onGround;
     bool jumping;
 
@@ -38,43 +38,52 @@ public class PlayerController : MonoBehaviour, IMovable
 
     void Update()
     {
-        UpdateRotation();
         UpdateMovement();
-    }
-
-    void OnCollisionEnter()
-    {
-        onGround = true;
-    }
-
-    void OnCollisionStay()
-    {
-        onGround = true;
-    }
-
-    private void FixedUpdate()
-    {
-        //Vector3 test()
-
-        onGround = false;
     }
 
     void LateUpdate()
     {
-        //transform.localRotation = Quaternion.Euler(0, rotation.x, 0);
-        cameraTransform.localRotation = Quaternion.Euler(-rotation.y, rotation.x, 0);
+        UpdateFacing();
     }
 
-    void UpdateRotation()
+    private void FixedUpdate()
+    {
+        DetermineVelocity();
+    }
+
+    void DetermineVelocity()
+    {
+        var velocity = rigidBody.velocity;
+
+        if (onGround)
+        {
+            velocity = Vector3.MoveTowards(velocity, targetVelocity, acceleration);
+        }
+        else
+        {
+            velocity = Vector3.MoveTowards(velocity,
+                    new Vector3(targetVelocity.x, velocity.y, targetVelocity.z), acceleration / 2);
+        }
+
+        if (jumping && onGround) velocity.y = jumpStrength;
+
+        rigidBody.velocity = velocity;
+
+        onGround = false;
+    }
+
+    void UpdateFacing()
     {
         var input = lookInput.ReadValue<Vector2>();
         rotation.x += input.x * mouseSensitivity;
         rotation.y += input.y * mouseSensitivity;
 
         rotation.y = math.clamp(rotation.y, -89f, 89f);
+
+        cameraTransform.localRotation = Quaternion.Euler(-rotation.y, rotation.x, 0);
     }
 
-    void UpdateMovement()
+    public void UpdateMovement()
     {
         jumping = (jumpInput.ReadValue<float>() > 0);
         var input = moveInput.ReadValue<Vector2>();
@@ -86,6 +95,16 @@ public class PlayerController : MonoBehaviour, IMovable
         inputVector = Vector3.ClampMagnitude(inputVector, 1f);
 
         var inputDirection = Vector3.Normalize(inputVector);
-        inputVelocity = inputVector * movementSpeed;
+        targetVelocity = inputVector * movementSpeed;
+    }
+
+    void OnCollisionEnter()
+    {
+        onGround = true;
+    }
+
+    void OnCollisionStay()
+    {
+        onGround = true;
     }
 }
